@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "WinUISample (Package)", "WinUISample\WinUISample (Package)\WinUISample (Package).wapproj", "{54F369E9-D770-4A94-8077-EDDB9B551780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUISample", "WinUISample\WinUISample\WinUISample.csproj", "{62FB917A-1AA0-46C1-AD35-1F43FA4F60FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinUISample", "WinUISample\WinUISample\WinUISample.csproj", "{62FB917A-1AA0-46C1-AD35-1F43FA4F60FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{3E38BE81-39BA-4AAE-8788-24E6CDA6801C}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

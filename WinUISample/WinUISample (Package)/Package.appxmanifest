@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="800cc167-7f7d-4d64-9c2e-dbc4f7eb5b79"
-    Publisher="CN=mpagani"
+    Name="WinUISample"
+    Publisher="CN=Matteo Pagani, O=Matteo Pagani, L=Como, S=Como, C=IT"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>WinUISample (Package)</DisplayName>
-    <PublisherDisplayName>mpagani</PublisherDisplayName>
+    <DisplayName>WinUI Sample</DisplayName>
+    <PublisherDisplayName>Matteo Pagani</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,12 +31,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="WinUISample (Package)"
+        DisplayName="WinUI Sample"
         Description="WinUISample (Package)"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
