@@ -37,7 +37,7 @@ jobs:
         dotnet-version: 5.0.100-preview.4   
        
     - name: Build
-      run: msbuild $env:Solution_Name /t:Restore /p:Platform=$env:Platform /p:Configuration=$env:Configuration /p:AppxBundle=$env:Appx_Bundle /p:AppxPackageSigningEnabled=$env:SigningEnabled /p:AppInstallerUri=${{env.appInstallerUri}} /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode
+      run: msbuild $env:Wap_Project_Path /t:Restore /p:Platform=$env:Platform /p:Configuration=$env:Configuration /p:AppxBundle=$env:Appx_Bundle /p:AppxPackageSigningEnabled=$env:SigningEnabled /p:AppInstallerUri=${{env.appInstallerUri}} /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode
       env:
         Appx_Bundle: Never
         Appx_Bundle_Platforms: x86
