@@ -75,16 +75,6 @@ jobs:
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
-     
-    - name: Install AzureSignTool
-      run: dotnet tool install --global AzureSignTool --version 2.0.17
-       
-    - name: Sign package
-      run: |
-            Get-ChildItem -recurse -Include *.msix | ForEach-Object {
-            $msixPath = $_.FullName
-            & AzureSignTool sign -kvu "${{ secrets.AzureKeyVaultUrl}}" -kvi "${{ secrets.AzureClientId }}" -kvs "${{ secrets.AzureClientSecret }}" -kvc ${{ secrets.AzureKeyVaultName}} -tr http://timestamp.digicert.com -v $msixPath
-            }    
       
     - name: Build
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=${{matrix.configuration}} /p:AppxBundle=$env:Appx_Bundle /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxPackageSigningEnabled=false /p:AppInstallerUri=${{env.appInstallerUri}} /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode
@@ -93,6 +83,16 @@ jobs:
         Appx_Bundle_Platforms: x86|x64
         Appx_Package_Build_Mode: SideloadOnly
         Configuration: ${{ matrix.configuration }}
+    
+    - name: Install AzureSignTool
+      run: dotnet tool install --global AzureSignTool --version 2.0.17
+       
+    - name: Sign package
+      run: |
+            Get-ChildItem -recurse -Include *.msix | ForEach-Object {
+            $msixPath = $_.FullName
+            & AzureSignTool sign -kvu "${{ secrets.AzureKeyVaultUrl}}" -kvi "${{ secrets.AzureClientId }}" -kvs "${{ secrets.AzureClientSecret }}" -kvc ${{ secrets.AzureKeyVaultName}} -tr http://timestamp.digicert.com -v $msixPath
+            }     
     
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
