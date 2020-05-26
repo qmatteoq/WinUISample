@@ -75,12 +75,6 @@ jobs:
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
-
-    # Restore the WPF application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the WPF application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
      
     - name: Install AzureSignTool
       run: dotnet tool install --global AzureSignTool --version 2.0.17
@@ -92,16 +86,14 @@ jobs:
             & AzureSignTool sign -kvu "${{ secrets.AzureKeyVaultUrl}}" -kvi "${{ secrets.AzureClientId }}" -kvs "${{ secrets.AzureClientSecret }}" -kvc ${{ secrets.AzureKeyVaultName}} -tr http://timestamp.digicert.com -v $msixPath
             }    
       
-
-    # Create the app package by building and packaging the Windows Application Packaging project
-    - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
+    - name: Build
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=${{matrix.configuration}} /p:AppxBundle=$env:Appx_Bundle /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxPackageSigningEnabled=false /p:AppInstallerUri=${{env.appInstallerUri}} /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode
       env:
         Appx_Bundle: Always
         Appx_Bundle_Platforms: x86|x64
         Appx_Package_Build_Mode: SideloadOnly
         Configuration: ${{ matrix.configuration }}
-
+    
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v1
