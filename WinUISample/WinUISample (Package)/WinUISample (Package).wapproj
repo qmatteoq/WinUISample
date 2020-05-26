@@ -32,8 +32,27 @@
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <EntryPointProjectUniqueName>..\WinUISample\WinUISample.csproj</EntryPointProjectUniqueName>
+	<EntryPointExe Condition="'$(BuildingInsideVisualStudio)' != 'true' ">WinUISample\WinUISample.exe</EntryPointExe>
+	<EntryPointProjectUniqueName Condition="'$(BuildingInsideVisualStudio)' == 'true' ">..\WinUISample\WinUISample.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>197A511FDFA0014BC16B115980E78142D02D90AA</PackageCertificateThumbprint>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AppxBundle>Always</AppxBundle>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -94,6 +113,7 @@
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
+	  
     <ProjectReference Include="..\WinUISample\WinUISample.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
@@ -105,4 +125,24 @@
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
   <Import Project="build\Microsoft.WinUI.AppX.targets" />
+  <Target Name="BuildRef" Condition="'$(BuildingInsideVisualStudio)' != 'true' " BeforeTargets="BeforeBuild">
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <NpeExecCmd>dotnet publish -c $(Configuration) "$(MSBuildThisFileDirectory)..\WinUISample\WinUISample.csproj" /p:PublishProfile=Properties\PublishProfiles\Win$(Platform).pubxml</NpeExecCmd>
+    </PropertyGroup>
+    <Message Text="Executing: $(NpeExecCmd)" Importance="High" />
+    <Exec Command="$(NpeExecCmd)" />
+    <Message Text="Built ref " />
+    <ItemGroup>
+      <TheFiles Include="..\WinUISample\bin\$(Configuration)\net5.0\win-$(Platform)\publish\**\*.*" />
+      <TheFiles TargetPath="NuGetPackageExplorer\%(RecursiveDir)%(Filename)%(Extension)" />
+      <BuiltRef Include="@(TheFiles)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </BuiltRef>
+    </ItemGroup>
+  </Target>
+  <Target Name="BuildRefsOutputGroup" Returns="@(BuiltRefsOutput)">
+    <ItemGroup>
+      <_PackagingOutputsUnexpanded Include="@(BuiltRef)" OutputGroup="BuildRefsOutputGroup" ProjectName="$(ProjectName)" />
+    </ItemGroup>
+  </Target>
 </Project>
