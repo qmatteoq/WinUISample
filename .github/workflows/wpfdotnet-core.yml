@@ -24,16 +24,20 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v1.4.0
-      with:
-        dotnet-version: 5.0.100-preview.4
-
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
-      
+    
+    - name: Install AzureSignTool
+      run: dotnet tool install --global AzureSignTool --version 2.0.17
+    
+    - name: DotNet setup
+      run: | 
+          Write-Host "##vso[task.setvariable variable=PATH;]${env:LocalAppData}\Microsoft\dotnet;${env:PATH}";
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; 
+          dotnet new globaljson --sdk-version "$($env:NET5_SDK_VERSION)" 
+          &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1'))) -Version "$($env:NET5_SDK_VERSION)" -Architecture "x64" -AzureFeed "$($env:NET5_SDK_FEED)"
+       
     - name: Build
       run: msbuild $env:Solution_Name /t:Restore /p:Platform=$env:Platform /p:Configuration=$env:Configuration /p:AppxBundle=$env:Appx_Bundle /p:UapAppxPackageBuildMode=SideloadOnly /p:AppxPackageSigningEnabled=false /p:AppInstallerUri=${{env.appInstallerUri}} /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode
       env:
@@ -43,8 +47,7 @@ jobs:
         Configuration: Release
         Platform: x86
     
-    - name: Install AzureSignTool
-      run: dotnet tool install --global AzureSignTool --version 2.0.17
+  
        
     - name: Sign package
       run: |
