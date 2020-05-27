@@ -34,6 +34,7 @@
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 	<EntryPointExe Condition="'$(BuildingInsideVisualStudio)' != 'true' ">WinUISample\WinUISample.exe</EntryPointExe>
 	<EntryPointProjectUniqueName Condition="'$(BuildingInsideVisualStudio)' == 'true' ">..\WinUISample\WinUISample.csproj</EntryPointProjectUniqueName>
+	<GetPackagingOutputsDependsOn Condition="'$(BuildingInsideVisualStudio)' != 'true' ">$(GetPackagingOutputsDependsOn);BuildRefsOutputGroup</GetPackagingOutputsDependsOn>
     <PackageCertificateThumbprint>197A511FDFA0014BC16B115980E78142D02D90AA</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
