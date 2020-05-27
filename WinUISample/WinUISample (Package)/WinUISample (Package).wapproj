@@ -31,7 +31,7 @@
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
 	<EntryPointExe Condition="'$(BuildingInsideVisualStudio)' != 'true' ">WinUISample\WinUISample.exe</EntryPointExe>
 	<EntryPointProjectUniqueName Condition="'$(BuildingInsideVisualStudio)' == 'true' ">..\WinUISample\WinUISample.csproj</EntryPointProjectUniqueName>
 	<GetPackagingOutputsDependsOn Condition="'$(BuildingInsideVisualStudio)' != 'true' ">$(GetPackagingOutputsDependsOn);BuildRefsOutputGroup</GetPackagingOutputsDependsOn>
@@ -113,12 +113,13 @@
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
-  <ItemGroup>
-	  
-    <ProjectReference Include="..\WinUISample\WinUISample.csproj">
-      <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
-  </ItemGroup>
+	<ItemGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+		<ProjectReference Include="..\WinUISample\WinUISample.csproj">
+			<SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+			<PublishProfile Condition="'$(Platform)'=='x64'">Properties\PublishProfiles\WinX64.pubxml</PublishProfile>
+			<PublishProfile Condition="'$(Platform)'=='x86'">Properties\PublishProfiles\WinX86.pubxml</PublishProfile>
+		</ProjectReference>
+	</ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs.Desktop, Version=14.0" />
     <!-- Needed for ucrtbased.dll when running a debug build. -->
