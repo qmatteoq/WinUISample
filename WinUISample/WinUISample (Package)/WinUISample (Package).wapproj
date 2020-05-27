@@ -134,7 +134,7 @@
     <Message Text="Built ref " />
     <ItemGroup>
       <TheFiles Include="..\WinUISample\bin\$(Configuration)\net5.0\win-$(Platform)\publish\**\*.*" />
-      <TheFiles TargetPath="NuGetPackageExplorer\%(RecursiveDir)%(Filename)%(Extension)" />
+      <TheFiles TargetPath="WinUISample\%(RecursiveDir)%(Filename)%(Extension)" />
       <BuiltRef Include="@(TheFiles)">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </BuiltRef>
